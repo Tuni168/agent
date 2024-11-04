@@ -1,0 +1,215 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Booking System with AI</title>
+    <style>
+        /* General styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f0f4f8;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        /* Navigation bar styling */
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #333;
+            padding: 10px;
+        }
+
+            .navbar a {
+                color: white;
+                padding: 10px 20px;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+                .navbar a:hover {
+                    background-color: #575757;
+                }
+
+        /* Section styling */
+        .section {
+            display: none;
+            margin-top: 20px;
+        }
+
+            .section.active {
+                display: block;
+            }
+
+        /* Form and button styling */
+        label, input, button, textarea {
+            display: block;
+            margin: 10px 0;
+        }
+
+        input, button, textarea {
+            padding: 8px;
+            width: 100%;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+
+        /* Chat box styling */
+        .chat-box {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="#home" onclick="showSection('home')">Home</a>
+        <a href="#appointment" onclick="showSection('appointment')">Appointment</a>
+        <a href="#feedback" onclick="showSection('feedback')">Feedback</a>
+        <a href="#contact" onclick="showSection('contact')">Contact</a>
+        <a href="#ai" onclick="showSection('ai')">AI Chat</a>
+    </div>
+
+    <div class="container">
+
+        <!-- Home Section -->
+        <div id="home" class="section active">
+            <h2>Welcome to the Appointment Booking System</h2>
+            <p>This system allows you to register, login, and book appointments easily.</p>
+        </div>
+
+        <!-- Appointment Section -->
+        <div id="appointment" class="section">
+            <h2>Appointment Booking</h2>
+            <button onclick="showRegister()">Register</button>
+            <button onclick="showLogin()">Login</button>
+
+            <!-- Registration Form -->
+            <div id="registerForm" class="hidden">
+                <h3>Register</h3>
+                <label>Email:</label>
+                <input type="email" id="registerEmail" placeholder="Enter email">
+                <label>Password:</label>
+                <input type="password" id="registerPassword" placeholder="Enter password">
+                <button onclick="register()">Register</button>
+                <button onclick="hideForms()">Back</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginForm" class="hidden">
+                <h3>Login</h3>
+                <label>Email:</label>
+                <input type="email" id="loginEmail" placeholder="Enter email">
+                <label>Password:</label>
+                <input type="password" id="loginPassword" placeholder="Enter password">
+                <button onclick="login()">Login</button>
+                <button onclick="hideForms()">Back</button>
+            </div>
+
+            <!-- Appointment Management -->
+            <div id="appointmentManager" class="hidden">
+                <h3>Manage Appointments</h3>
+                <button onclick="showBookAppointment()">Book Appointment</button>
+                <button onclick="viewAppointments()">View Appointments</button>
+                <button onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <!-- Feedback Section -->
+        <div id="feedback" class="section">
+            <h2>Feedback</h2>
+            <label for="feedbackText">Your Feedback:</label>
+            <textarea id="feedbackText" rows="4" placeholder="Enter your feedback here..."></textarea>
+            <button onclick="submitFeedback()">Submit Feedback</button>
+        </div>
+
+        <!-- Contact Section -->
+        <div id="contact" class="section">
+            <h2>Contact Us</h2>
+            <p>If you have any questions, feel free to reach out:</p>
+            <p>Email: support@appointmentbooking.com</p>
+            <p>Phone: +123 456 7890</p>
+        </div>
+
+        <!-- AI Chat Section -->
+        <div id="ai" class="section">
+            <h2>AI Chat Assistant</h2>
+            <div class="chat-box" id="chatBox">
+                <p><strong>AI:</strong> Hello! How can I assist you today?</p>
+            </div>
+            <input type="text" id="userInput" class="chat-input" placeholder="Type your message here..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Section navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // AI Chat Functionality
+        function sendMessage() {
+            const userInput = document.getElementById('userInput').value;
+            if (!userInput) return;
+
+            const chatBox = document.getElementById('chatBox');
+            const userMessage = `<p><strong>You:</strong> ${userInput}</p>`;
+            chatBox.innerHTML += userMessage;
+
+            // AI response (simple predefined responses for demo)
+            let aiResponse;
+            if (userInput.toLowerCase().includes("appointment")) {
+                aiResponse = "To book an appointment, please navigate to the 'Appointment' section.";
+            } else if (userInput.toLowerCase().includes("feedback")) {
+                aiResponse = "We value your feedback! Feel free to use the 'Feedback' section.";
+            } else {
+                aiResponse = "I'm here to help! Please let me know if you need assistance with booking, feedback, or other inquiries.";
+            }
+
+            chatBox.innerHTML += `<p><strong>AI:</strong> ${aiResponse}</p>`;
+            document.getElementById('userInput').value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        }
+    </script>
+</body>
+</html>
+
